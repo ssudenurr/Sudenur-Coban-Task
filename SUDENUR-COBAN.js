@@ -8,7 +8,6 @@ link.href =
   "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css";
 link.rel = "stylesheet";
 
-//Linki <head> alanına ekle
 $("head").append(iconLink);
     
 (() => {  const init = () => {
@@ -20,7 +19,7 @@ if (window.location.href === "https://www.e-bebek.com/") { // homepage sayfasın
 
   };
   let productData = [];
-  const $previousWrapper = $(".Section1.has-components");
+  const $previousWrapper = $(".Section1.has-components"); // Hangi class altına eklicekse onu buluyor
 
   const fetchProduct = () => {
     fetch(
@@ -90,7 +89,7 @@ if (window.location.href === "https://www.e-bebek.com/") { // homepage sayfasın
                           <p class="original_price" style="text-decoration:line-through;">${
                             product.original_price
                           }</p>
-                           <span class="discount-badge" > 
+                            <span class="discount-badge" > 
                               %${Math.round( // ürünün indirim yüzdesini hesaplama 
                                 ((parseFloat(product.original_price) -
                                   parseFloat(product.price)) /
@@ -100,44 +99,37 @@ if (window.location.href === "https://www.e-bebek.com/") { // homepage sayfasın
                           </span>
                           <p class="price" >${
                             product.price
-                          } TL</p>
-                         
-                          `
+                          } TL</p>`
                           : `
-                          <p class="original_price">${
-                            product.original_price || product.price 
-                          }TL</p>
-                          `
+                          <p class="original_price">${product.original_price || product.price}TL</p>`
                       } 
                       </div>
-                </a>    
+                </a> 
                 <button class="addToCard">Sepete Ekle</button>
 
-            <div class="heart-container" data-product-id="${product.id}">  
-                <div class="heart">
-                    <img id="default-favorite" src="https://www.e-bebek.com/assets/svg/default-favorite.svg" class="heart-icon" >
-                    <img src="https://www.e-bebek.com/assets/svg/default-favorite.svg" class="favorited-heart hovered ${heartClass}" data-product-id="${product.id}"></img>
+                <div class="heart-container" data-product-id="${product.id}">  
+                    <div class="heart">
+                        <img id="default-favorite" src="https://www.e-bebek.com/assets/svg/default-favorite.svg" class="heart-icon" >
+                        <img src="https://www.e-bebek.com/assets/svg/default-favorite.svg" class="favorited-heart hovered ${heartClass}" data-product-id="${product.id}"></img>
+                    </div>
+                    <div class="favorited-heart">
+                      <img id="default-favorite" src="https://www.e-bebek.com/assets/svg/added-favorite.svg" class="heart-icon" >
+                      <img src="https://www.e-bebek.com/assets/svg/added-favorite-hover.svg" class="heart-icon hovered ${heartClass}" data-product-id="${product.id}"></img>
+                    </div>
                 </div>
-                <div class="favorited-heart">
-                  <img id="default-favorite" src="https://www.e-bebek.com/assets/svg/added-favorite.svg" class="heart-icon" >
-                  <img src="https://www.e-bebek.com/assets/svg/added-favorite-hover.svg" class="heart-icon hovered ${heartClass}" data-product-id="${product.id}"></img>
-                </div>
-            </div>
-
-                  
-            </div>
+          </div>
             `;
     });
+
     //ürünler arasında gezinmek için butonlar
     html += ` 
             </div> <!-- carousel-track -->
-            <div class="slide-buttons">
-                <button class="slider-button" id="prev">&#10094;</button>
-                <button class="slider-button" id="next">&#10095;</button>
-            </div>
-        </div> <!-- carousel-container -->
+              <div class="slide-buttons">
+                  <button class="slider-button" id="prev">&#10094;</button>
+                  <button class="slider-button" id="next">&#10095;</button>
+              </div>
+          </div> <!-- carousel-container -->
         </div>
-       
         `;
 
     $previousWrapper.after(html);
@@ -147,8 +139,8 @@ if (window.location.href === "https://www.e-bebek.com/") { // homepage sayfasın
     const css = `
         .container.sude-odev{
           padding-top:20px;
-
         }
+
         .section-header{
             margin-top:20px
             display: flex;
@@ -165,7 +157,7 @@ if (window.location.href === "https://www.e-bebek.com/") { // homepage sayfasın
             border-top-right-radius: 35px;
             font-weight: 700;
         }  
-            .carousel-container {
+        .carousel-container {
             position: relative;
             width: 100%;
             overflow: hidden;
@@ -313,16 +305,16 @@ if (window.location.href === "https://www.e-bebek.com/") { // homepage sayfasın
             z-index: 10;
         }
         #prev{
-          color:#f28e00;
-          background-color: #fef6eb;
-          background-position: 18px;
-          font-size: 20px;
-          left: -65px;
-          width: 50px;
-          height: 50px;
-          border-radius: 50%;
-          bottom: 50%;
-          top: auto;
+            color:#f28e00;
+            background-color: #fef6eb;
+            background-position: 18px;
+            font-size: 20px;
+            left: -65px;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            bottom: 50%;
+            top: auto;
         }
         #next{
             color:#f28e00;
@@ -337,9 +329,10 @@ if (window.location.href === "https://www.e-bebek.com/") { // homepage sayfasın
             right: -65px;
         }
         .slider-button:hover{
-        background-color: #ffffff;
-        border: 1px solid #f28e00;
+          background-color: #ffffff;
+          border: 1px solid #f28e00;
         }
+
         /* Responsive Ayarlar */
         @media (max-width: 1400px) {
             .product-card {
@@ -426,6 +419,7 @@ if (window.location.href === "https://www.e-bebek.com/") { // homepage sayfasın
       currentIndex += 1;
       updateCarouselSize();
     });
+    
     //önceki ürünü gösterir
     $("#prev").on("click", () => {
       currentIndex -= 1;

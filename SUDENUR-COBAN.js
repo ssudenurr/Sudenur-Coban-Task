@@ -1,15 +1,26 @@
-var script = document.createElement("script");
-script.src = "https://code.jquery.com/jquery-3.7.1.min.js";
-document.head.appendChild(script);
+(async function () {
+  // jQuery yükle
+  if (!window.jQuery) {
+    await new Promise((resolve, reject) => {
+      const script = document.createElement('script');
+      script.src = 'https://code.jquery.com/jquery-3.7.1.min.js';
+      script.onload = resolve;
+      script.onerror = reject;
+      document.head.appendChild(script);
+    });
+  }
 
-//ikonlar için font awesome dahil etme
-const iconLink = document.createElement("link");
-link.href =
-  "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css";
-link.rel = "stylesheet";
+  // Font Awesome yükle
+  if (!document.querySelector('link[href*="font-awesome"]')) {
+    const link = document.createElement('link');
+    link.href = 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css';
+    link.rel = 'stylesheet';
+    document.head.appendChild(link);
+  }
 
-$("head").append(iconLink);
-    
+
+})();
+
 (() => {  const init = () => {
 if (window.location.href === "https://www.e-bebek.com/") { // homepage sayfasında olup olmadığı kontrol etmeye çalıştım
   fetchProduct();
@@ -81,40 +92,29 @@ if (window.location.href === "https://www.e-bebek.com/") { // homepage sayfasın
                               : 12
                           })</div>
                       </div>
-                      <div class="price-container">${
-                        product.original_price &&
-                        parseFloat(product.original_price) !==
-                          parseFloat(product.price)
-                          ? `
-                          <p class="original_price" style="text-decoration:line-through;">${
-                            product.original_price
-                          }</p>
-                            <span class="discount-badge" > 
-                              %${Math.round( // ürünün indirim yüzdesini hesaplama 
-                                ((parseFloat(product.original_price) -
-                                  parseFloat(product.price)) /
-                                  parseFloat(product.original_price)) *
-                                  100
-                              )}
-                          </span>
-                          <p class="price" >${
-                            product.price
-                          } TL</p>`
-                          : `
-                          <p class="original_price">${product.original_price || product.price}TL</p>`
-                      } 
+                <div class="price-container">${
+                  product.original_price &&
+                  parseFloat(product.original_price) !== parseFloat(product.price)
+                    ? `
+                      <div class="price-top">
+                        <p class="original_price" style="text-decoration:line-through; font-size:15px; font-weight:500">${product.original_price}</p>
+                        <span class="discount-badge"> %${Math.round(((parseFloat(product.original_price) - parseFloat(product.price)) / parseFloat(product.original_price)) * 100)}</span>
                       </div>
+                      <p class="price">${product.price} TL </p>`
+                    : `<p class="original_price">${product.original_price || product.price} TL </p>`
+                }
+                </div>
+
                 </a> 
                 <button class="addToCard">Sepete Ekle</button>
-
                 <div class="heart-container" data-product-id="${product.id}">  
                     <div class="heart">
                         <img id="default-favorite" src="https://www.e-bebek.com/assets/svg/default-favorite.svg" class="heart-icon" >
-                        <img src="https://www.e-bebek.com/assets/svg/default-favorite.svg" class="favorited-heart hovered ${heartClass}" data-product-id="${product.id}"></img>
+                        <img src="https://www.e-bebek.com/assets/svg/default-hover-favorite.svg" class="favorited-heart hovered ${heartClass}" data-product-id="${product.id}"></img>
                     </div>
                     <div class="favorited-heart">
-                      <img id="default-favorite" src="https://www.e-bebek.com/assets/svg/added-favorite.svg" class="heart-icon" >
-                      <img src="https://www.e-bebek.com/assets/svg/added-favorite-hover.svg" class="heart-icon hovered ${heartClass}" data-product-id="${product.id}"></img>
+                      <img src="https://www.e-bebek.com/assets/svg/added-favorite.svg" >
+                      <img src="https://www.e-bebek.com/assets/svg/added-favorite-hover.svg" class="${heartClass}" data-product-id="${product.id}"></img>
                     </div>
                 </div>
           </div>
@@ -187,7 +187,7 @@ if (window.location.href === "https://www.e-bebek.com/") { // homepage sayfasın
         .product-card:hover{
             border: 3px solid #f28e00;
         }
-        .product-card img {
+        .product-image{
             position: relative;
             display: block;
             width: 100%;
@@ -195,10 +195,10 @@ if (window.location.href === "https://www.e-bebek.com/") { // homepage sayfasın
             margin-bottom: 65px;
         }
         .product-name {
-            font-size: 12px;
-            color: #4a4a4a;
+            font-size: 1.2rem;
+            color: #7d7d7d;
             line-height: 1.3;
-            font-weight: normal;
+            font-weight: 500;
             text-align: left;
             margin-bottom: 8px;
             height: 32px;
@@ -211,11 +211,10 @@ if (window.location.href === "https://www.e-bebek.com/") { // homepage sayfasın
         .rating {
             display: flex;
             align-items: center;
-            margin-bottom: 8px;
         }
         .rating .stars {
             color: #f5a623; 
-            font-size: 22px; 
+            font-size: 24px; 
             margin-right: 5px;
         }
         .rating .count {
@@ -225,36 +224,64 @@ if (window.location.href === "https://www.e-bebek.com/") { // homepage sayfasın
         
         .price-container {
             display: flex;
-            gap: 10px;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 4px;
+            min-height: 60px;
+        }
+        .price-top{
+          display:flex;
+          gap: 5px;
+          align-items: flex-end;
         }
         .price {
-            display: block;
-            width: 100%;
             font-size: 2.2rem;
             font-weight: 600;
             color: #00a365;
+            margin:0;
         }
-        .original_price {
-            font-size: 2.2rem;
-            font-weight: 600;
-            color: rgb(125, 125, 125);
-        }
-        .discount-badge{
-          color: #00a365;
-          font-size: 18px;
-          font-weight: 700;
-          display: inline-flex;
+      .original_price {
+        font-size: 20px; 
+        font-weight: 600;
+        color: rgb(125, 125, 125);
+        margin: 0; 
+        line-height: 1;
+      }
+      .discount-badge {
+        color: #00a365;
+        font-size: 20px;
+        font-weight: 700;
+        display: inline-flex;
+        justify-content: center;
+        line-height: 1;
+      }
+      .heart,
+      .favorited-heart {
+          width: 42px;
+          height: 42px;
+          right: 15px;
+          top: 10px;
+          position: absolute;
+          cursor: pointer;
+          background-color: #fff;
+          border-radius: 50%; 
+          box-shadow: 0 2px 4px 0 #00000024;
+          display: flex;
+          align-items: center;
           justify-content: center;
+          padding: 0; 
+          overflow: hidden; /* img taşmasını engelle */
+      }
+
+        .heart img,
+        .favorited-heart img {
+            position: absolute;  /* img'leri üst üste sabitle */
+            width: 42px !important;
+            height: 42px !important;
+
         }
-        .heart{
-            right: 15px;
-            top: 10px;
-            position: absolute;
-            cursor: pointer;
-            background-color: #fff;
-            border-radius: 50%;
-            box-shadow: 0 2px 4px 0 #00000024;
-        }
+
+
         .heart #default-favorite{
             position: absolute;
             top: 11px !important;
@@ -263,21 +290,6 @@ if (window.location.href === "https://www.e-bebek.com/") { // homepage sayfasın
             height: 20px !important;
           }
 
-        .heart img{
-            width: 42px !important;
-            height: 42px !important;
-        }
-
-        .favorited-heart {
-            display: none;
-            right: 15px;
-            top: 10px;
-            position: absolute;
-            cursor: pointer;
-            background-color: #fff;
-            border-radius: 50%;
-            box-shadow: 0 2px 4px 0 #00000024;
-        }
 
         .addToCard{
             width: 100%;
@@ -378,9 +390,7 @@ if (window.location.href === "https://www.e-bebek.com/") { // homepage sayfasın
                 font-size: 30px;
                 padding: 15px;
             }
-        }
-
-            `;
+        }`;
 
     $("<style>").addClass("sude-style").html(css).appendTo("head");
   };
@@ -389,6 +399,7 @@ if (window.location.href === "https://www.e-bebek.com/") { // homepage sayfasın
     let currentIndex = 0;
     const $track = $(".carousel-track");
     const totalProducts = $(".product-card").length;
+
     //Ekran boyutuna göre sayfada görüntülenecek ürün sayısı
     function getVisibleProducts() {
       const windowWith = $(window).width();
@@ -397,8 +408,9 @@ if (window.location.href === "https://www.e-bebek.com/") { // homepage sayfasın
       if (windowWith < 1300) return 3;
       if(windowWith < 1400) return 4;
       return 5;
-    }
-      //ürünler arasında gezinmeyi sağlar
+    };
+
+    //ürünler arasında gezinmeyi sağlar
     function updateCarouselSize() {
       const visibleProducts = getVisibleProducts();
       const slideWith = 100 / visibleProducts;
@@ -413,13 +425,14 @@ if (window.location.href === "https://www.e-bebek.com/") { // homepage sayfasın
 
       const translateX = -(currentIndex * slideWith);
       $track.css("transform", `translateX(${translateX}%)`);
-    }
+    };
+
     //sonraki ürünü gösterir
     $("#next").on("click", () => {
       currentIndex += 1;
       updateCarouselSize();
     });
-    
+
     //önceki ürünü gösterir
     $("#prev").on("click", () => {
       currentIndex -= 1;
@@ -438,7 +451,7 @@ if (window.location.href === "https://www.e-bebek.com/") { // homepage sayfasın
     } else {
       $container.find(".heart").show();
       $container.find(".favorited-heart").hide();
-    }
+    };
 
     $container.find(".heart, .favorited-heart").on("click", function () {
       const isNowFavorited = localStorage.getItem(`favorite-${productId}`);
